@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: git2consul
+  name: git2consul
+  namespace: ft-transverse-git2consul
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: git2consul
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: git2consul
+    spec:
+      containers:
+      - image: cimpress/git2consul
+        name: git2consul
+        command: ["/bin/sh","-c","git2consul --config-file $(CONFIGURATION_FILE)"]
+        resources: {}
+        env:
+        - name: CONSUL_ENDPOINT
+          value: "consul-consul-server.ft-transverse-consul.svc.cluster.local"
+        - name: CONSUL_PORT
+          value: "8500"
+        - name: CONFIGURATION_FILE
+          value: "/tmp/configuration.json"
+        volumeMounts:
+        - name: configuration
+          mountPath: /tmp/configuration.json
+          subPath: configuration.json
+      volumes:
+      - name: configuration
+        configMap:
+          name: configuration-file
+status: {}
