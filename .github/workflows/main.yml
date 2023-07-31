@@ -3,11 +3,11 @@ name: 'git2consul workflow'
 on:
   workflow_dispatch:
   push:
-    paths-ignore:
-      - '.github/**'
-      - 'README.md'
-      - '.gitignore'
-      - 'LICENSE.md'
+    # paths-ignore:
+    #   - '.github/**'
+    #   - 'README.md'
+    #   - '.gitignore'
+    #   - 'LICENSE.md'
     branches:
       - main
 
