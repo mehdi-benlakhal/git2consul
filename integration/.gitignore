@@ -1,0 +1,5 @@
+consul.zip
+.vagrant
+integration_test_repo
+*test.rb
+*.log

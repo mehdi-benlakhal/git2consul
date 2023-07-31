@@ -1,0 +1,50 @@
+{
+  "name": "git2consul",
+  "description": "System for moving data from git to consul",
+  "license": "Apache-2.0",
+  "version": "0.12.13",
+  "contributors": [
+    {
+      "name": "Ryan Breen",
+      "email": "rbreen@cimpress.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Cimpress-MCP/git2consul.git"
+  },
+  "dependencies": {
+    "body-parser": "~1.4.3",
+    "bunyan": "1.1.3",
+    "consul": "^0.10.0",
+    "coveralls": "^2.11.2",
+    "express": "~4.6.1",
+    "mkdirp": "0.5.0",
+    "rimraf": "2.2.8",
+    "underscore": "^1.8.0",
+    "properties": "1.2.1",
+    "js-yaml": "^3.6.1"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-debian-package": "^0.1.11",
+    "istanbul": "0.2.11",
+    "mocha": "1.20.1",
+    "request": "^2.42.0",
+    "should": "3.3.2",
+    "xunit-file": "0.0.5"
+  },
+  "preferGlobal": true,
+  "bin": "./index.js",
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha --reporter spec -t 10000 test | bunyan",
+    "cov": "`npm bin`/istanbul cover --root . -x node_modules -x test --dir ./reports `npm bin`/_mocha -- --reporter spec -t 10000 test | bunyan",
+    "coveralls": "npm run cov && node_modules/coveralls/bin/coveralls.js < reports/lcov.info"
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  ]
+}

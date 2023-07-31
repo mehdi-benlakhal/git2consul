@@ -1,0 +1,76 @@
+name: 'git2consul workflow'
+
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - '.github/**'
+      - 'README.md'
+      - '.gitignore'
+      - 'LICENSE.md'
+    branches:
+      - ft-transverse-git2consul
+      - prod
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup env vars
+        run: |
+          echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        shell: bash
+      
+      - name: Configure AWS credentials
+        id: login-aws
+        uses: protectline/actions-aws-configure-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ECR_TEAMTOOL_DEV_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_TEAMTOOL_DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-region:  ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: docker-build
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: transverse
+          DOCKER_FILE: Dockerfile
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.REPOSITORY_NAME }}-${{ github.ref_name }} -f $DOCKER_FILE .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:${{ env.REPOSITORY_NAME }}-${{ github.ref_name }}
+  
+  scan:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Setup env vars
+        run: |
+          echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Configure AWS credentials
+        id: login-aws
+        uses: protectline/actions-aws-configure-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ECR_TEAMTOOL_DEV_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.ECR_TEAMTOOL_DEV_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Scan Docker image
+        id: docker-scan
+        uses: alexjurkiewicz/ecr-scan-image@v2.0.0
+        with:
+          repository: transverse
+          tag: ${{ env.REPOSITORY_NAME }}-${{ github.ref_name }}
+          fail_threshold: high
+
+      - run: echo "${{ steps.docker-scan.outputs.total }} total vulnerabilities."
