@@ -1,0 +1,5 @@
+resources:
+  - create-ns.yaml
+  - configmap-configuration.yaml
+  - git2consul-deploy.yaml
+  - cronjob-git2consul.yaml

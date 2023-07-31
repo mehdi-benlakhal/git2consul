@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "repos" : [{
+    "name" : "sample_configuration",
+    "url" : "https://github.com/protectline/git2consul.git",
+    "branches" : ["ft-transverse-git2consul"],
+    "source_root": "samples/",
+    "expand_keys": true,
+    "mountpoint": "mount1",
+    "include_branch_name" : true,
+    "hooks": [{
+      "type" : "polling",
+      "interval" : "1"
+     }]
+  }]
+}
