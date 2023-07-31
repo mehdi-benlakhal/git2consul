@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: git2consult-test
+  name: git2consul-test
   # You'll usually want to add your resources to the argocd namespace.
   namespace: argocd
 
@@ -18,7 +18,7 @@ spec:
   # Destination cluster and namespace to deploy the application
   destination:
     server: https://kubernetes.default.svc
-    namespace: git2consult-test
+    namespace: git2consul-test
 
   # Sync policy
   syncPolicy:
