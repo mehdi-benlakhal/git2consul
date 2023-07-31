@@ -1,4 +1,4 @@
-FROM 098808187153.dkr.ecr.eu-west-3.amazonaws.com/transverse:alpine-3.18
+FROM node:6.9
 
 RUN apk --update add nodejs npm git openssh ca-certificates && \
     rm -rf /var/cache/apk/* && \

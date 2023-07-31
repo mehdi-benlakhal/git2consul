@@ -38,6 +38,8 @@ jobs:
     name: 'Build'
     runs-on: ubuntu-latest
     steps:
+      - name: "Build:checkout"
+      uses: actions/checkout@v2
 
       - name: 'Build:dockerimage'
         uses: docker/build-push-action@v1
@@ -49,7 +51,7 @@ jobs:
           tags: ${{ github.sha }}
           tag_with_ref: true
 
-          # - name: Login to Amazon ECR
+      # - name: Login to Amazon ECR
       #   id: login-ecr
       #   uses: aws-actions/amazon-ecr-login@v1
 
