@@ -1,4 +1,4 @@
-FROM node:6.9
+FROM alpine:3.18
 
 RUN apk --update add nodejs npm git openssh ca-certificates && \
     rm -rf /var/cache/apk/* && \
